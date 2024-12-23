@@ -1,0 +1,21 @@
+
+# --- For-Bot-Working --------- #
+TgCrypto 
+pyromod==1.5
+pyrogram
+# --- For-Database ------------ #
+pymongo 
+dnspython 
+motor  # Async driver for MongoDB
+
+# --- For-Web-Response ------- #
+aiohttp 
+python-dotenv
+# --- Advance-Format --- #
+pyrofork
+pytz
+requests
+bs4
+shortzy
+aiofiles
+asyncio
