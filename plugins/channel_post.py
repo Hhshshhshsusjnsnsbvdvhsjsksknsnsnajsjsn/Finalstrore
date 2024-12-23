@@ -1,7 +1,7 @@
 import asyncio
 from pyrogram import filters, Client
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, MessageIdInvalid
 from shortzy import Shortzy
 
 from bot import Bot
@@ -27,7 +27,7 @@ async def channel_post(client: Client, message: Message):
     base64_string = await encode(string)
 
     # Generate website and bot links
-    website_link = f"{WEBSITE_URL}?rohit_18={base64_string}" if WEBSITE_URL_MODE else None
+    website_link = f"{WEBSITE_URL}?codexbot={base64_string}" if WEBSITE_URL_MODE else None
     bot_link = f"https://t.me/{client.username}?start={base64_string}"
 
     # Shorten the bot link if enabled
@@ -60,42 +60,6 @@ async def channel_post(client: Client, message: Message):
     if not DISABLE_CHANNEL_BUTTON:
         await post_message.edit_reply_markup(reply_markup)
 
-@Bot.on_message(filters.channel & filters.incoming & filters.chat(CHANNEL_ID))
-async def new_post(client: Client, message: Message):
-    if DISABLE_CHANNEL_BUTTON:
-        return
-
-    # Generate base64-encoded ID
-    converted_id = message.id * abs(client.db_channel.id)
-    string = f"get-{converted_id}"
-    base64_string = await encode(string)
-
-    # Generate website and bot links
-    website_link = f"{WEBSITE_URL}?rohit_18={base64_string}" if WEBSITE_URL_MODE else None
-    bot_link = f"https://t.me/{client.username}?start={base64_string}"
-
-    # Shorten the bot link if enabled
-    shortzy = Shortzy(api_key=SHORTLINK_API_KEY, base_site=SHORTLINK_API_URL)
-    short_bot_link = bot_link
-    if USE_SHORTLINK:
-        short_bot_link = await shortzy.convert(bot_link)
-
-    # Create inline keyboard
-    buttons = []
-    if WEBSITE_URL_MODE:
-        buttons.append([InlineKeyboardButton("🔗 Website Link", url=website_link)])
-    buttons.append([InlineKeyboardButton("🔁 Bot Link (Original)", url=bot_link)])
-    if USE_SHORTLINK:
-        buttons.append([InlineKeyboardButton("⚡️ Shortened Bot Link", url=short_bot_link)])
-
-    reply_markup = InlineKeyboardMarkup(buttons)
-
-    # Update the message's reply markup
-    try:
-        await message.edit_reply_markup(reply_markup)
-    except Exception as e:
-        print(e)
-        pass
 
 @Bot.on_message(filters.channel & filters.incoming & filters.chat(CHANNEL_ID))
 async def new_post(client: Client, message: Message):
@@ -106,7 +70,7 @@ async def new_post(client: Client, message: Message):
     # Generate encoded ID and links
     converted_id = message.id * abs(client.db_channel.id)
     base64_string = await encode(f"get-{converted_id}")
-    website_link = f"{WEBSITE_URL}?rohit_18={base64_string}" if WEBSITE_URL_MODE else None
+    website_link = f"{WEBSITE_URL}?codexbot={base64_string}" if WEBSITE_URL_MODE else None
     bot_link = f"https://t.me/{client.username}?start={base64_string}"
 
     # Shorten link using Shortzy
