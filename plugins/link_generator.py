@@ -52,7 +52,7 @@ async def batch(client: Client, message: Message):
     base64_string = await encode(string)
 
     # Generate links
-    website_link = f"{WEBSITE_URL}?PS_File_Stream_Bot={base64_string}" if WEBSITE_URL_MODE else None
+    website_link = f"{WEBSITE_URL}?codexbot={base64_string}" if WEBSITE_URL_MODE else None
     bot_link = f"https://t.me/{client.username}?start={base64_string}"
 
     # Shorten the bot link if enabled using Shortzy API
